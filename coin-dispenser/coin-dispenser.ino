@@ -12,7 +12,7 @@
 
 #include <Servo.h> 
  
-Servo myservo;  // create servo object to control a servo 
+Servo toonieServo;  // create servo object to control a servo 
                 // twelve servo objects can be created on most boards
  
 int pos = 0;    // variable to store the servo position 
@@ -21,13 +21,20 @@ boolean stop = false;
  
 void setup() 
 { 
-  myservo.attach(9);  // attaches the servo on pin 9 to the servo object 
+  toonieServo.attach(8);  // attaches the servo on pin 9 to the servo object 
 } 
  
 void loop() 
 { 
-  //myservo.write(0);
-  if(!stop)
+  
+  toonieServo.write(0);
+  
+  delay(2000);
+  
+  toonieServo.write(180);
+  
+  delay(2000);
+  /*if(!stop)
   {
     for (int i = 0; i<=loops-1; i+=1)
     {
@@ -46,5 +53,5 @@ void loop()
         stop = true;
       }
     }
-  }
+  }*/
 }

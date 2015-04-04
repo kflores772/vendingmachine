@@ -1,18 +1,13 @@
 #include <Servo.h>
 
-#define quartSenPin A0
-#define loonSenPin A1
-#define toonSenPin A2
+#define quartSenPin 18
+#define loonSenPin 19
+#define toonSenPin 20
 #define quartServoPin 11
 #define loonServoPin 12
 #define toonServoPin 13
 
 float usrAmnt = 0;
-
-int quartThreshold = 0;
-int loonThreshold = 0;
-int toonThreshold = 0;
-boolean jammed = false;
 
 Servo quartServo;
 Servo loonServo;
@@ -20,9 +15,13 @@ Servo toonServo;
 
 void setup()
 {
+  // This effectively inverts the behavior of the INPUT mode, where HIGH means the sensor is off, and LOW means the sensor is on.
   pinMode(quartSenPin, INPUT_PULLUP);
   pinMode(loonSenPin, INPUT_PULLUP);
   pinMode(toonSenPin, INPUT_PULLUP);
+  attachInterrupt(5, add25Cents, RISING); //check rising
+  attachInterrupt(4, add1Dollar, RISING);
+  attachInterrupt(3, add2Dollar, RISING);
 
   quartServo.attach(quartServoPin);
   loonServo.attach(loonServoPin);
@@ -33,21 +32,50 @@ void setup()
 
 void loop()
 {
+  Serial.print("Total: $");
+  Serial.print(usrAmnt);
+  Serial.println(" ");
   
+  //obtain keypad input, potentially use ISR
+  
+  noInterrupts();
+  if (usrAmnt == 0) {
+    // keep asking for money or choose a selection
+  } else {
+    // check keypad input and dispense item selected 
+  }
+  interrupts();
 }
 
 /*
- * detectCoinInput - checks if a coin has been inputted
+ * add25Cents: called when a quarter has been inputted
  */
-void detectCoinInput() //make this an interrupt??
+void add25Cents() 
 {
-  int quartSense = analogRead(quartSenPin);
-  int loonSense = analogRead(loonSenPin);
-  int toonSense = analogRead(toonSenPin);
-  
-  if (quartSense <= quartThreshold) {
-  
-  }
+  noInterrupts();
+  usrAmnt = usrAmnt + 0.25;
+  // print usramnt
+  interrupts();
+}
+
+/*
+ * add1Dollar: called when a loonie has been inputted
+ */
+void add1Dollar()
+{
+  noInterrupts();
+  usrAmnt = usrAmnt + 1;
+  interrupts();
+}
+
+/*
+ * add2Dollar: called when a toonie has been inputted
+ */
+void add2Dollar()
+{
+  noInterrupts();
+  usrAmnt = usrAmnt + 2;
+  interrupts();
 }
 
 /*
@@ -116,3 +144,17 @@ void giveChange(float changeAmnt)
   
   usrAmnt = 0;
 }
+
+/*
+ * detectCoinInput - checks if a coin has been inputted
+ *
+void detectCoinInput() //make this an interrupt??
+{
+  int quartSense = analogRead(quartSenPin);
+  int loonSense = analogRead(loonSenPin);
+  int toonSense = analogRead(toonSenPin);
+  
+  if (quartSense <= quartThreshold) {
+  
+  }
+}*/

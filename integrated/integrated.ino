@@ -1,22 +1,53 @@
 #include <Servo.h>
 
+#define quartSenPin A0
+#define loonSenPin A1
+#define toonSenPin A2
+#define quartServoPin 11
+#define loonServoPin 12
+#define toonServoPin 13
+
+float usrAmnt = 0;
+
+int quartThreshold = 0;
+int loonThreshold = 0;
+int toonThreshold = 0;
+boolean jammed = false;
+
 Servo quartServo;
 Servo loonServo;
 Servo toonServo;
-int quartPin = 13;
-int loonPin = 12;
-int toonPin = 11;
 
 void setup()
 {
- quartServo.attach(quartPin);
- loonServo.attach(loonPin);
- toonServo.attach(toonPin);
+  pinMode(quartSenPin, INPUT_PULLUP);
+  pinMode(loonSenPin, INPUT_PULLUP);
+  pinMode(toonSenPin, INPUT_PULLUP);
+
+  quartServo.attach(quartServoPin);
+  loonServo.attach(loonServoPin);
+  toonServo.attach(toonServoPin);
+  
+  Serial.begin(9600);
 }
 
 void loop()
 {
   
+}
+
+/*
+ * detectCoinInput - checks if a coin has been inputted
+ */
+void detectCoinInput() //make this an interrupt??
+{
+  int quartSense = analogRead(quartSenPin);
+  int loonSense = analogRead(loonSenPin);
+  int toonSense = analogRead(toonSenPin);
+  
+  if (quartSense <= quartThreshold) {
+  
+  }
 }
 
 /*
@@ -53,8 +84,8 @@ void dispenseCoin(String coin, int times)
  */
 void giveChange(float changeAmnt)
 {
-  int dollarAmnt = (int)changeAmnt;
-  int centAmnt = (int)((changeAmnt-(float)dollarAmnt)*10); //ex. 5.25 -> 25
+  int dollarAmnt = int(changeAmnt);
+  int centAmnt = int((changeAmnt-float(dollarAmnt))*10); //ex. 5.25 -> 25
   int nquart = 0; // number of quarters to dispense
   int ntoon = 0;
   int i = 0;
@@ -82,5 +113,6 @@ void giveChange(float changeAmnt)
       dispenseCoin("loon", 1); 
     }
   }
-
+  
+  usrAmnt = 0;
 }

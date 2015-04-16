@@ -6,7 +6,7 @@ int jamCounter = 0; // increments when coin is detected for 3 consecutive loops
 boolean jammed = false; // true when sorter is jammed
 
 void setup()  { 
-  pinMode(A0,INPUT_PULLUP); // 1$ input
+  pinMode(A0, INPUT_PULLUP); // 1$ input
   Serial.begin(9600);
   
   initialValue = analogRead(A0);
@@ -17,6 +17,8 @@ void setup()  {
 void loop() {
   int dollarSensor = analogRead(A0);
 
+  Serial.println(dollarSensor);
+  /*
   if (!jammed) {    
     // reset total once it reaches > 10 since it will never be > 10
     if (total > 10) {
@@ -51,6 +53,6 @@ void loop() {
       jammed = false;
     }
   }
-  
-  delay(50);
+  */
+  delay(100);
 }
